@@ -1,0 +1,100 @@
+DATABASE ARCHITECTURE & ER DIAGRAM
+Hostel Complaint Raising Platform
+Date: March 7, 2026
+
+1. ENTITY RELATIONSHIP (ER) OVERVIEW
+
+Relationships:
+- USER (Student) raises 0 to many COMPLAINTS.
+- USER (Recipient) receives 0 to many NOTIFICATIONS.
+- COMPLAINT contains 0 to many ATTACHMENTS (Images/Videos).
+- WARDEN/ADMIN manages 0 to many COMPLAINTS.
+
+Entity Definitions:
+
+[USER Entity]
+- ID (Primary Key, UUID)
+- Name (String)
+- Email (String, Unique)
+- Password Hash (String)
+- Role (Enum: student, warden, admin)
+- Block (String: A, B, C, etc.)
+- Room (String)
+- Mobile (String)
+- Parent Mobile (String)
+- Residency Status (Enum: stayed, not-in-hostel, left-hostel, graduated)
+- Created At (Datetime)
+
+[COMPLAINT Entity]
+- ID (Primary Key, e.g., C-1001)
+- Student ID (Foreign Key -> USER.id)
+- Title (String)
+- Description (Text)
+- Category (String)
+- Priority (Enum: Low, Medium, High)
+- Status (Enum: Pending, In Progress, Resolved, Escalated, etc.)
+- Block (String)
+- Room (String)
+- Created At (Datetime)
+- Resolved By (Foreign Key -> USER.id)
+- Resolution Comment (Text)
+
+[NOTIFICATION Entity]
+- ID (Primary Key, UUID)
+- User ID (Foreign Key -> USER.id)
+- Message (Text)
+- Is Read (Boolean)
+- Type (String: status_change, new_complaint, etc.)
+- Created At (Datetime)
+
+[ATTACHMENT Entity]
+- ID (Primary Key, UUID)
+- Complaint ID (Foreign Key -> COMPLAINT.id)
+- File URL (Text)
+- File Type (String: image, video)
+- Uploaded At (Datetime)
+
+------------------------------------------------------------------
+
+2. TABLE SCHEMAS
+
+TABLE: users
+| Column            | Type    | Constraints       | Description                                  |
+|-------------------|---------|-------------------|----------------------------------------------|
+| id                | UUID    | PK, Not Null      | Unique identifier for the user.              |
+| name              | VARCHAR | Not Null          | Full name of the user.                       |
+| email             | VARCHAR | Unique, Not Null  | Email used for login.                        |
+| role              | ENUM    | Not Null          | Role: student, warden, admin.                |
+| residency_status  | ENUM    | Default 'stayed'  | stayed, no-hostel, left-hostel, graduated.   |
+| block             | VARCHAR |                   | Hostel block assignment.                     |
+| room              | VARCHAR |                   | Room number assignment.                      |
+
+TABLE: complaints
+| Column            | Type    | Constraints       | Description                                  |
+|-------------------|---------|-------------------|----------------------------------------------|
+| id                | VARCHAR | PK, Not Null      | Prefixed ID (e.g., C-1001).                  |
+| student_id        | UUID    | FK (users.id)     | Submitting student's ID.                     |
+| title             | VARCHAR | Not Null          | Short summary of issue.                      |
+| status            | ENUM    | Default 'Pending' | Pending, In Progress, Resolved, Escalated.   |
+| priority          | ENUM    | Default 'Medium'  | Low, Medium, High.                           |
+| block             | VARCHAR | Not Null          | Location block.                              |
+| room              | VARCHAR | Not Null          | Location room.                               |
+
+TABLE: attachments
+| Column            | Type    | Constraints       | Description                                  |
+|-------------------|---------|-------------------|----------------------------------------------|
+| id                | UUID    | PK                | Unique attachment ID.                        |
+| complaint_id      | VARCHAR | FK                | Reference to parent complaint.               |
+| file_url          | TEXT    | Not Null          | Storage path or URL.                         |
+| file_type         | VARCHAR |                   | 'image' or 'video'.                          |
+
+TABLE: notifications
+| Column            | Type    | Constraints       | Description                                  |
+|-------------------|---------|-------------------|----------------------------------------------|
+| id                | UUID    | PK                | Unique notification ID.                      |
+| user_id           | UUID    | FK (users.id)     | Recipient user.                              |
+| message           | TEXT    | Not Null          | Alert content.                               |
+| is_read           | BOOLEAN | Default FALSE     | Read tracking.                               |
+
+------------------------------------------------------------------
+

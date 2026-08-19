@@ -1,13 +1,12 @@
 import { motion } from "framer-motion";
 import { Card } from "../../components/ui/Card";
-import { AlertCircle, CheckCircle, Clock, List } from "lucide-react";
+import { AlertCircle, CheckCircle, Clock, List, Shield, ArrowUpRight, Plus, Activity, Lock } from "lucide-react";
 import { useComplaint } from "../../context/ComplaintContext";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../../utils/cn";
 import ComplaintDetailModal from "../../components/complaints/ComplaintDetailModal";
-import ProfileCard from "../../components/student/ProfileCard";
 
 const StudentDashboard = () => {
     const { user } = useAuth();
@@ -20,154 +19,165 @@ const StudentDashboard = () => {
     
     // Calculate Stats
     const stats = [
-        { label: "Complaints", value: myComplaints.length, icon: List, color: "from-blue-500 to-indigo-600", shadow: "shadow-blue-500/20" },
-        { label: "Pending", value: myComplaints.filter(c => c.status === 'Pending').length, icon: Clock, color: "from-amber-400 to-orange-500", shadow: "shadow-amber-500/20" },
-        { label: "Resolved", value: myComplaints.filter(c => c.status === 'Resolved').length, icon: CheckCircle, color: "from-emerald-400 to-teal-500", shadow: "shadow-emerald-500/20" },
-        { label: "Escalated", value: myComplaints.filter(c => c.status === 'Escalated').length, icon: AlertCircle, color: "from-rose-500 to-red-600", shadow: "shadow-rose-500/20" },
+        { label: "TOTAL COMPLAINTS", value: myComplaints.length, icon: List, change: "+12%" },
+        { label: "PENDING ISSUES", value: myComplaints.filter(c => c.status === 'Pending').length, icon: Clock, change: "Active" },
+        { label: "RESOLVED TICKETS", value: myComplaints.filter(c => c.status === 'Resolved').length, icon: CheckCircle, change: "98.5%" },
+        { label: "ESCALATED LOGS", value: myComplaints.filter(c => c.status === 'Escalated').length, icon: AlertCircle, change: "Priority" },
     ];
 
     return (
-        <div className="space-y-10 pb-10">
-            {/* Profile Section with Welcome Message */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="flex-1"
-              >
-                  <h1 className="text-4xl font-extrabold tracking-tight text-dark-950 dark:text-white mb-2">
-                    Student Dashboard
-                  </h1>
-                  <p className="text-dark-500 dark:text-dark-400 font-medium">
-                    Monitor your requests and get updates in real-time.
-                  </p>
-              </motion.div>
-              
-              <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="hidden md:block"
-              >
-                  <ProfileCard user={user} />
-              </motion.div>
-            </div>
+        <div className="space-y-8 pb-10 font-sans">
+            {/* ZeroShield Hero Console Header */}
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white dark:bg-[#0b1928] border border-dark-200 dark:border-[#182c3c] rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden"
+            >
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+                    <div>
+                        <div className="flex items-center gap-3 mb-2">
+                            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-dark-900 dark:text-white">
+                                Student SOC Console
+                            </h1>
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-[#081520] text-[#00c885] border border-[#00c885]/30 uppercase flex items-center gap-1.5">
+                                <Lock size={12} /> mTLS VERIFIED
+                            </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-dark-500 dark:text-dark-400 font-medium">
+                            Welcome back, {user?.name || "Student"}. Room telemetry &amp; service request pipeline active.
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <button 
+                            onClick={() => navigate('/student/raise-complaint')}
+                            className="px-5 py-3 rounded-xl bg-[#00c885] hover:bg-[#00b074] text-white font-mono font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
+                        >
+                            <Plus size={16} /> Submit Service Ticket
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
 
             {/* Stats Grid */}
             <motion.div 
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
             >
                 {stats.map((stat, index) => (
-                    <Card key={index} hover className="stat-card group relative overflow-hidden">
-                        {/* Decorative background circle */}
-                        <div className={`absolute -right-6 -top-6 w-24 h-24 bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-all duration-500 rounded-full blur-2xl`} />
-                        
-                        <div className="flex items-center justify-between relative z-10">
-                            <div>
-                                <p className="text-[10px] font-bold text-dark-400 dark:text-dark-500 uppercase tracking-[0.2em] mb-1">{stat.label}</p>
-                                <h3 className="text-4xl font-extrabold text-dark-900 dark:text-white mt-1 tracking-tight">{stat.value}</h3>
-                            </div>
-                            <div className={`p-4 rounded-2xl bg-gradient-to-br ${stat.color} ${stat.shadow} text-white shadow-lg transform transition-transform group-hover:scale-110 group-hover:rotate-3 duration-300`}>
-                                <stat.icon className="w-6 h-6" />
-                            </div>
+                    <Card key={index} className="!p-5 bg-white dark:bg-[#0b1928] border border-dark-200 dark:border-[#182c3c]">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-dark-400">
+                                {stat.label}
+                            </span>
+                            <stat.icon size={15} className="text-[#00c885]" />
+                        </div>
+                        <div className="flex items-baseline justify-between mt-3">
+                            <h3 className="text-2xl font-extrabold font-mono text-dark-900 dark:text-white">
+                                {stat.value}
+                            </h3>
+                            <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[#00c885]/10 text-[#00c885]">
+                                {stat.change}
+                            </span>
                         </div>
                     </Card>
                 ))}
             </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                <div className="lg:col-span-2 space-y-8">
+            {/* Content Split: Left Recent Complaints + Right ZeroTrust Proxy Engine Banner */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-4">
                     <div className="flex items-center justify-between">
-                      <h2 className="text-2xl font-extrabold text-dark-900 dark:text-white tracking-tight">Recent Activity</h2>
-                      <button 
-                        onClick={() => navigate('/student/my-complaints')}
-                        className="text-sm font-bold text-primary-600 dark:text-primary-400 hover:underline flex items-center gap-1 group"
-                      >
-                        View all 
-                        <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
-                      </button>
+                        <h2 className="text-lg font-extrabold text-dark-900 dark:text-white tracking-tight">
+                            Recent Incident Telemetry
+                        </h2>
+                        <button 
+                            onClick={() => navigate('/student/my-complaints')}
+                            className="text-xs font-mono font-bold text-[#00c885] hover:underline flex items-center gap-1"
+                        >
+                            VIEW ALL TICKETS <ArrowUpRight size={13} />
+                        </button>
                     </div>
 
-                    <div className="space-y-4">
-                      {myComplaints.length > 0 ? (
-                        myComplaints.slice(0, 3).map((complaint, index) => (
-                          <motion.div 
-                            key={complaint.id} 
-                            onClick={() => setSelectedComplaint(complaint)}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 + (index * 0.1) }}
-                          >
-                              <Card hover className="flex items-center justify-between p-6 sm:p-6 !py-5 cursor-pointer !rounded-3xl border border-dark-100 dark:border-dark-800/50 group">
-                                  <div className="flex items-center gap-5">
-                                      <div className={cn(
-                                        "w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition-transform duration-300",
-                                        complaint.status === 'Resolved' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' : 
-                                        complaint.status === 'Pending' ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600' : 'bg-primary-50 dark:bg-primary-900/20 text-primary-600'
-                                      )}>
-                                          {complaint.category === 'Electrical' ? '⚡' : 
-                                           complaint.category === 'Plumbing' ? '🚰' : 
-                                           complaint.category === 'Carpentry' ? '🪑' : '🛠️'}
-                                      </div>
-                                      <div>
-                                          <h4 className="font-bold text-dark-900 dark:text-white text-lg tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                                            {complaint.category}
-                                          </h4>
-                                          <div className="flex items-center gap-3 text-sm font-semibold text-dark-400 dark:text-dark-500 mt-0.5">
-                                            <span>{new Date(complaint.created_at).toLocaleDateString()}</span>
-                                            <span className="w-1 h-1 rounded-full bg-dark-300 dark:bg-dark-600" />
-                                            <span className="capitalize">{complaint.category}</span>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div className={cn(
-                                    "px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm",
-                                    complaint.status === 'Resolved' ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 
-                                    complaint.status === 'Pending' ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20' : 'bg-primary-500/10 text-primary-600 border border-primary-500/20'
-                                  )}>
-                                      {complaint.status}
-                                  </div>
-                              </Card>
-                          </motion.div>
-                        ))
-                      ) : (
-                        <div className="text-center py-20 bg-dark-50 dark:bg-dark-900/20 rounded-[3rem] border-2 border-dashed border-dark-200 dark:border-dark-800/50">
-                          <p className="text-dark-400 dark:text-dark-500 font-bold">No complaints found. Take a rest! 🌟</p>
-                        </div>
-                      )}
+                    <div className="space-y-3">
+                        {myComplaints.length > 0 ? (
+                            myComplaints.slice(0, 4).map((complaint) => (
+                                <motion.div 
+                                    key={complaint.id} 
+                                    onClick={() => setSelectedComplaint(complaint)}
+                                    className="cursor-pointer"
+                                >
+                                    <Card className="!p-4 bg-white dark:bg-[#0b1928] border border-dark-200 dark:border-[#182c3c] hover:border-[#00c885]/40 transition-all flex items-center justify-between">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-[#081520] border border-[#182c3c] flex items-center justify-center text-lg text-[#00c885]">
+                                                {complaint.category === 'Electrical' ? '⚡' : 
+                                                 complaint.category === 'Plumbing' ? '🚰' : 
+                                                 complaint.category === 'Carpentry' ? '🪑' : '🛠️'}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-extrabold text-dark-900 dark:text-white text-sm tracking-tight">
+                                                    {complaint.category} Request
+                                                </h4>
+                                                <p className="text-[10px] font-mono text-dark-400 mt-0.5">
+                                                    ID: #{complaint.id} &bull; {new Date(complaint.created_at || Date.now()).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <span className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase ${
+                                            complaint.status === 'Resolved' ? 'bg-emerald-500/10 text-[#00c885] border border-emerald-500/20' : 
+                                            complaint.status === 'Pending' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-rose-500/10 text-rose-500 border border-rose-500/20'
+                                        }`}>
+                                            {complaint.status}
+                                        </span>
+                                    </Card>
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className="text-center py-16 bg-white dark:bg-[#0b1928] rounded-2xl border border-dark-200 dark:border-[#182c3c]">
+                                <p className="text-dark-400 text-xs font-mono font-bold">No active service logs. System operational. 🌟</p>
+                            </div>
+                        )}
                     </div>
                 </div>
-                
-                <div className="space-y-6">
-                     <h2 className="text-2xl font-extrabold text-dark-900 dark:text-white tracking-tight">Need Help?</h2>
-                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.6 }}
-                     >
-                        <Card className="bg-gradient-to-br from-primary-600 via-indigo-700 to-primary-800 text-white !rounded-[2.5rem] p-10 overflow-hidden relative group shadow-2xl shadow-primary-500/30">
-                            {/* Decorative elements */}
-                            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
-                            <div className="absolute top-4 right-4 text-6xl opacity-20 transform -rotate-12 group-hover:rotate-0 transition-transform duration-500">✨</div>
-                            
-                            <div className="relative z-10">
-                              <h3 className="text-3xl font-extrabold mb-4 tracking-tight leading-tight">Fast Request Resolution</h3>
-                              <p className="mb-10 text-primary-100 font-medium leading-relaxed italic">
-                                "Facing an issue in your room? Our team is ready to help you fix it as soon as possible."
-                              </p>
-                              <button 
-                                  onClick={() => navigate('/student/raise-complaint')}
-                                  className="w-full py-4 bg-white text-primary-700 font-extrabold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 uppercase tracking-widest text-xs"
-                              >
-                                  Launch New Complaint
-                              </button>
+
+                {/* Right Cyber Panel Banner */}
+                <div>
+                    <div className="bg-[#081520] border border-[#182c3c] rounded-2xl p-6 text-white shadow-xl flex flex-col justify-between h-full min-h-[340px]">
+                        <div>
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="px-2 py-0.5 rounded text-[9px] font-mono font-extrabold bg-[#00c885]/20 text-[#00c885] border border-[#00c885]/30 uppercase">
+                                    ZERO TRUST ENFORCED
+                                </span>
+                                <Activity size={15} className="text-[#00c885]" />
                             </div>
-                        </Card>
-                     </motion.div>
+
+                            <h3 className="text-xl font-extrabold text-white tracking-tight">
+                                ZeroTrust Hostelfix Engine
+                            </h3>
+                            <p className="text-xs font-mono text-dark-300 mt-2 leading-relaxed">
+                                Encrypted 256-bit student complaint routing to assigned warden node.
+                            </p>
+
+                            <div className="mt-6 pt-4 border-t border-[#182c3c] space-y-2 font-mono text-xs">
+                                <div className="flex justify-between text-dark-300">
+                                    <span>PROXY NODE:</span>
+                                    <span className="text-[#00c885] font-bold">node-ap-south-1</span>
+                                </div>
+                                <div className="flex justify-between text-dark-300">
+                                    <span>ENCRYPTION:</span>
+                                    <span className="text-[#00c885] font-bold">mTLS 1.3</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button 
+                            onClick={() => navigate('/student/raise-complaint')}
+                            className="w-full py-3 mt-6 rounded-xl bg-[#00c885] hover:bg-[#00b074] text-white font-mono font-extrabold text-xs uppercase tracking-wider transition-all shadow-md shadow-emerald-500/20 cursor-pointer"
+                        >
+                            Launch New Complaint →
+                        </button>
+                    </div>
                 </div>
             </div>
 

@@ -9,65 +9,73 @@
 @layer base {
   body {
     @apply font-sans antialiased transition-colors duration-300;
-    /* Light mode: crisp Slate 50 */
-    background-color: #f8fafc;
-    color: #0f172a;
+    /* ZeroShield crisp light off-white background */
+    background-color: #f3f6f8;
+    color: #0b1928;
   }
 
   .dark body,
   :root.dark body {
-    background-color: #020617;
-    color: #f8fafc;
+    background-color: #06121e;
+    color: #f0f4f7;
   }
 
-  /* ─ Design Tokens ─ */
+  /* ─ ZeroShield Design Tokens ─ */
   :root {
-    --bg-page:        #f8fafc;
+    --bg-page:        #f3f6f8;
     --bg-surface:     #ffffff;
-    --bg-surface-2:   #f1f5f9;
-    --bg-surface-3:   #e2e8f0;
+    --bg-surface-2:   #f8fafc;
+    --bg-surface-3:   #edf2f6;
     --border:         #e2e8f0;
     --border-subtle:  #f1f5f9;
-    --text-primary:   #0f172a;
+    --text-primary:   #0b1928;
     --text-secondary: #475569;
-    --text-muted:     #94a3b8;
-    --accent:         #6366f1;
-    --shadow-sm:      0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md:      0 2px 4px -1px rgb(0 0 0 / 0.06);
-    --shadow-lg:      0 4px 6px -1px rgb(0 0 0 / 0.08);
-    --shadow-premium: 0 4px 6px -1px rgb(0 0 0 / 0.08);
+    --text-muted:     #8da0b5;
+    --accent:         #00c885;
+    --accent-dark:    #081520;
+    --shadow-sm:      0 1px 3px 0 rgb(0 0 0 / 0.04);
+    --shadow-md:      0 4px 12px -2px rgb(0 0 0 / 0.06);
+    --shadow-lg:      0 10px 25px -5px rgb(0 0 0 / 0.08);
+    --shadow-premium: 0 10px 30px -5px rgba(0, 200, 133, 0.08);
   }
 
   .dark {
-    --bg-page:        #0f172a;
-    --bg-surface:     #1e293b;
-    --bg-surface-2:   #334155;
-    --bg-surface-3:   #475569;
-    --border:         #334155;
-    --border-subtle:  #1e293b;
-    --text-primary:   #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted:     #94a3b8;
-    --accent:         #818cf8;
-    --shadow-sm:      0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-md:      0 4px 6px -1px rgb(0 0 0 / 0.4);
-    --shadow-lg:      0 4px 6px -1px rgb(0 0 0 / 0.4);
-    --shadow-premium: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --bg-page:        #06121e;
+    --bg-surface:     #0b1928;
+    --bg-surface-2:   #0e2032;
+    --bg-surface-3:   #15293d;
+    --border:         #182c3c;
+    --border-subtle:  #0f2233;
+    --text-primary:   #f0f4f7;
+    --text-secondary: #8da5b8;
+    --text-muted:     #5e7c94;
+    --accent:         #00c885;
+    --accent-dark:    #040b11;
+    --shadow-sm:      0 1px 3px 0 rgb(0 0 0 / 0.4);
+    --shadow-md:      0 4px 12px -2px rgb(0 0 0 / 0.5);
+    --shadow-lg:      0 10px 25px -5px rgb(0 0 0 / 0.6);
+    --shadow-premium: 0 10px 30px -5px rgba(0, 200, 133, 0.15);
   }
 }
 
 @layer components {
   /* ── Buttons ── */
   .btn-primary {
-    @apply px-4 py-2 bg-primary-600 text-white rounded-md shadow-sm
-           hover:bg-primary-700 transition-colors active:scale-95
-           font-medium text-sm;
+    @apply px-4 py-2.5 bg-[#00c885] hover:bg-[#00b074] text-white rounded-xl shadow-sm
+           transition-all duration-200 active:scale-95
+           font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2;
+  }
+
+  .btn-dark {
+    @apply px-4 py-2.5 bg-[#081520] hover:bg-[#0c1e2d] text-white rounded-xl border border-[#182c3c]
+           transition-all duration-200 active:scale-95
+           font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-white dark:bg-dark-800 text-dark-700 dark:text-dark-200 rounded-md border border-dark-200 dark:border-dark-700
-           hover:bg-dark-50 dark:hover:bg-dark-700 transition-colors active:scale-95
-           font-medium text-sm shadow-sm;
+    @apply px-4 py-2 bg-white dark:bg-[#0b1928] text-dark-700 dark:text-dark-200 rounded-xl border border-dark-200 dark:border-[#182c3c]
+           hover:bg-dark-50 dark:hover:bg-[#0e2032] transition-colors active:scale-95
+           font-bold text-xs tracking-tight shadow-sm;
   }
 
   /* ── Cards ── */
@@ -75,21 +83,21 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
-    @apply rounded-lg overflow-hidden;
+    @apply rounded-2xl overflow-hidden transition-all duration-200;
   }
 
   .card-premium {
     background-color: var(--bg-surface);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
-    @apply rounded-lg;
+    @apply rounded-2xl;
   }
 
   .card-hover {
     @apply transition-all duration-200;
   }
   .card-hover:hover {
-    @apply shadow-md -translate-y-0.5;
+    @apply shadow-md -translate-y-0.5 border-primary-500/40;
   }
 
   /* ── Glass Panel -> Solid Panel ── */
@@ -97,7 +105,7 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-md);
-    @apply rounded-xl;
+    @apply rounded-2xl;
   }
 
   /* ── Sidebar ── */
@@ -125,7 +133,7 @@
     background-color: var(--bg-surface);
     border: 1px solid var(--border);
     color: var(--text-primary);
-    @apply w-full px-3 py-2 rounded-md focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-colors placeholder:text-dark-400 font-normal text-sm;
+    @apply w-full px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none transition-colors placeholder:text-dark-400 font-medium text-sm;
   }
 
   /* ── Page background ── */
@@ -138,14 +146,14 @@
   .stat-card {
     background-color: var(--bg-surface);
     border: 1px solid var(--border);
-    @apply rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200;
   }
 
   /* ── Table ── */
   .table-header {
     background-color: var(--bg-surface-2);
     color: var(--text-secondary);
-    @apply text-[10px] uppercase font-bold tracking-[0.1em] px-6 py-4;
+    @apply text-[10px] font-mono uppercase font-extrabold tracking-widest px-6 py-4;
   }
   .table-row-hover:hover {
     background-color: var(--bg-surface-2);

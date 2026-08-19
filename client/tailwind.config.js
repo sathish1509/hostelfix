@@ -6,29 +6,30 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: "#eef2ff",
-          100: "#e0e7ff",
-          200: "#c7d2fe",
-          300: "#a5b4fc",
-          400: "#818cf8",
-          500: "#6366f1", // indigo 500
-          600: "#4f46e5", // indigo 600
-          700: "#4338ca",
-          800: "#3730a3",
-          900: "#312e81",
-          950: "#1e1b4b",
+          50: "#e6fbf4",
+          100: "#cbf7e6",
+          200: "#98eed0",
+          300: "#5ee1b3",
+          400: "#26ce95",
+          500: "#00c885", // ZeroShield mint emerald
+          600: "#00a86e",
+          700: "#008658",
+          800: "#006745",
+          900: "#025339",
+          950: "#003122",
         },
-        accent: {
-          50: "#f0fdf4",
-          100: "#dcfce7",
-          200: "#bbf7d0",
-          300: "#86efac",
-          400: "#4ade80",
-          500: "#22c55e", // emerald 500
-          600: "#16a34a",
-          700: "#15803d",
-          800: "#166534",
-          900: "#14532d",
+        cyber: {
+          50: "#f0f4f7",
+          100: "#dbe4eb",
+          200: "#b7c9d6",
+          300: "#8da5b8",
+          400: "#5e7c94",
+          500: "#3d5c73",
+          600: "#2a4356",
+          700: "#182c3c",
+          800: "#0b1928", // Cyber navy card background
+          900: "#081520", // Cyber dark banner background
+          950: "#050d15", // Cyber deep dark background
         },
         dark: {
           50: "#f8fafc",
@@ -41,11 +42,12 @@ export default {
           700: "#334155",
           800: "#1e293b",
           900: "#0f172a",
-          950: "#020617", // slate 950
+          950: "#06121e",
         },
       },
       fontFamily: {
-        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+        sans: ["'Plus Jakarta Sans'", "'Inter'", "sans-serif"],
+        mono: ["'JetBrains Mono'", "'Space Mono'", "monospace"],
       },
       boxShadow: {
         'premium': '0 10px 40px -10px rgba(0, 0, 0, 0.1)',

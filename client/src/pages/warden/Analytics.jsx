@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "../../components/ui/Card";
 import { useComplaint } from "../../context/ComplaintContext";
 import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
 import {
     PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend
@@ -45,7 +46,8 @@ const WardenAnalytics = () => {
         return () => clearTimeout(t);
     }, []);
 
-    const blockComplaints = complaints.filter(c => c.block === 'A');
+    const { user } = useAuth();
+    const blockComplaints = complaints; // Backend already filters by warden block
 
     // KPI data
     const kpis = [
@@ -83,19 +85,40 @@ const WardenAnalytics = () => {
         },
     ];
 
-    const categoryData = [
-        { name: 'Electrical', value: 12 },
-        { name: 'Plumbing', value: 8 },
-        { name: 'Cleaning', value: 5 },
-        { name: 'Wifi', value: 15 },
-    ];
+    // Dynamic Category Data
+    const categoryDataMap = {};
+    blockComplaints.forEach(c => {
+        const cat = c.category || 'Other';
+        categoryDataMap[cat] = (categoryDataMap[cat] || 0) + 1;
+    });
+    const categoryData = Object.keys(categoryDataMap).map(key => ({
+        name: key,
+        value: categoryDataMap[key]
+    }));
 
-    const timeData = [
-        { name: 'Week 1', resolved: 10, pending: 5 },
-        { name: 'Week 2', resolved: 15, pending: 3 },
-        { name: 'Week 3', resolved: 8, pending: 8 },
-        { name: 'Week 4', resolved: 20, pending: 2 },
-    ];
+    // Dynamic Time Data (grouped by week of the month)
+    const timeDataMap = {
+        'Week 1': { name: 'Week 1', resolved: 0, pending: 0 },
+        'Week 2': { name: 'Week 2', resolved: 0, pending: 0 },
+        'Week 3': { name: 'Week 3', resolved: 0, pending: 0 },
+        'Week 4': { name: 'Week 4', resolved: 0, pending: 0 },
+    };
+
+    blockComplaints.forEach(c => {
+        const date = new Date(c.created_at);
+        const day = date.getDate();
+        let week = 'Week 1';
+        if (day > 7 && day <= 14) week = 'Week 2';
+        else if (day > 14 && day <= 21) week = 'Week 3';
+        else if (day > 21) week = 'Week 4';
+
+        if (c.status === 'Resolved') {
+            timeDataMap[week].resolved += 1;
+        } else {
+            timeDataMap[week].pending += 1;
+        }
+    });
+    const timeData = Object.values(timeDataMap);
 
     const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444'];
 
@@ -113,7 +136,7 @@ const WardenAnalytics = () => {
     return (
         <div className="space-y-8">
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Block A Analytics</h1>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Block {user?.block || 'Assigned'} Analytics</h1>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                     <TrendingUp size={16} className="text-emerald-500" />
                     <span>Live data</span>

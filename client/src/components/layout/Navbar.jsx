@@ -14,7 +14,7 @@ const Navbar = ({ toggleSidebar }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [status, setStatus] = useState("stayed");
+
   const notifRef = useRef(null);
   const profileRef = useRef(null);
 
@@ -43,10 +43,9 @@ const Navbar = ({ toggleSidebar }) => {
   const gradientClass = roleColors[user?.role] || "from-primary-500 to-primary-700";
 
   const studentStatusOptions = [
-    { id: 'stayed', label: 'In Hostel', color: 'bg-emerald-500', ring: 'ring-emerald-500/20' },
-    { id: 'not-in-hostel', label: 'On Leave', color: 'bg-amber-500', ring: 'ring-amber-500/20' },
-    { id: 'left-hostel', label: 'Left Hostel', color: 'bg-rose-500', ring: 'ring-rose-500/20' },
-    { id: 'graduated', label: 'Graduated', color: 'bg-indigo-500', ring: 'ring-indigo-500/20' },
+    { id: 'stayed', label: 'Available', color: 'bg-emerald-500', ring: 'ring-emerald-500/20' },
+    { id: 'not-in-hostel', label: 'Currently Not In', color: 'bg-amber-500', ring: 'ring-amber-500/20' },
+    { id: 'left-hostel', label: 'Leave', color: 'bg-rose-500', ring: 'ring-rose-500/20' },
   ];
 
   const staffStatusOptions = [
@@ -56,8 +55,8 @@ const Navbar = ({ toggleSidebar }) => {
   ];
 
   const statusOptions = user?.role === 'student' ? studentStatusOptions : staffStatusOptions;
-
-  const currentStatus = statusOptions.find(s => s.id === status) || statusOptions[0];
+  const currentStatusId = user?.statusId || "stayed";
+  const currentStatus = statusOptions.find(s => s.id === currentStatusId) || statusOptions[0];
 
   return (
     <>
@@ -173,15 +172,15 @@ const Navbar = ({ toggleSidebar }) => {
                     {statusOptions.map((opt) => (
                       <button
                         key={opt.id}
-                        onClick={() => setStatus(opt.id)}
+                        onClick={() => updateUser({ ...user, statusId: opt.id, currentStatus: opt.label, statusColor: opt.color })}
                         title={opt.label}
-                        className={`w-1/4 py-1.5 flex justify-center rounded-lg transition-all duration-300 ${
-                          status === opt.id 
+                        className={`flex-1 py-1.5 flex justify-center rounded-lg transition-all duration-300 ${
+                          currentStatusId === opt.id 
                           ? 'bg-white dark:bg-dark-700 shadow-sm scale-110 z-10' 
                           : 'hover:bg-dark-100/50 dark:hover:bg-dark-800/50 grayscale opacity-40 hover:grayscale-0 hover:opacity-100'
                         }`}
                       >
-                        <div className={`w-2.5 h-2.5 rounded-full ${opt.color} ${status === opt.id ? `ring-4 ${opt.ring}` : ''}`} />
+                        <div className={`w-2.5 h-2.5 rounded-full ${opt.color} ${currentStatusId === opt.id ? `ring-4 ${opt.ring}` : ''}`} />
                       </button>
                     ))}
                   </div>

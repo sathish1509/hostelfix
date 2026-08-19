@@ -17,20 +17,12 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-const isAdmin = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
-    next();
-  } else {
-    res.status(403).json({ message: 'Access denied. Admin role required.' });
-  }
-};
-
 const isWarden = (req, res, next) => {
-  if (req.user && (req.user.role === 'warden' || req.user.role === 'admin')) {
+  if (req.user && req.user.role === 'warden') {
     next();
   } else {
     res.status(403).json({ message: 'Access denied. Warden role required.' });
   }
 };
 
-module.exports = { verifyToken, isAdmin, isWarden };
+module.exports = { verifyToken, isWarden };

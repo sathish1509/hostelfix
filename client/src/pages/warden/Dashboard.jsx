@@ -116,7 +116,7 @@ const WardenDashboard = () => {
                                     <div className={`w-2 h-2 mt-2 rounded-full ${c.status === 'Resolved' ? 'bg-green-500' : c.status === 'In Progress' ? 'bg-blue-500' : c.status === 'Escalated' ? 'bg-red-500' : 'bg-orange-500'}`}></div>
                                     <div>
                                         <p className="text-sm text-gray-800 dark:text-gray-200">
-                                            {c.status === 'Pending' ? 'New complaint raised in' : `${c.status} complaint for`} Room {c.room_number}
+                                            {c.status === 'Pending' ? 'New' : c.status} {c.category || 'issue'} reported by {c.student_name || 'Student'} {c.room_number ? `(Room ${c.room_number})` : ''}
                                         </p>
                                         <p className="text-xs text-gray-400">{new Date(c.created_at).toLocaleDateString()}</p>
                                     </div>

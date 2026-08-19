@@ -1,11 +1,11 @@
 const db = require('../config/db');
 
-exports.getAllStudents = async (req, res) => {
+exports.getAllUsers = async (req, res) => {
   try {
-    const students = await db.query(
-      "SELECT id, name, email, role, room_number, created_at FROM users WHERE role = 'student' ORDER BY name ASC"
+    const users = await db.query(
+      "SELECT id, name, email, role, room_number, block, created_at FROM users WHERE role IN ('student', 'warden') ORDER BY name ASC"
     );
-    res.json(students.rows);
+    res.json(users.rows);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -44,6 +44,22 @@ exports.updateProfile = async (req, res) => {
     }
 
     res.json(updatedUser.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedUser = await db.query('DELETE FROM users WHERE id = $1 RETURNING id', [id]);
+    
+    if (deletedUser.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json({ message: 'User deleted successfully' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

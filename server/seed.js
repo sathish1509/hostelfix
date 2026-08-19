@@ -13,18 +13,6 @@ const seedDatabase = async () => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash('123', salt);
 
-    // Seed Admin
-    const adminCheck = await pool.query("SELECT * FROM users WHERE email = 'admin@hostel.com'");
-    if (adminCheck.rows.length === 0) {
-      await pool.query(
-        "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4)",
-        ['System Admin', 'admin@hostel.com', hashedPassword, 'admin']
-      );
-      console.log("Created admin user");
-    } else {
-        console.log("Admin user already exists");
-    }
-
     // Seed Warden
     const wardenCheck = await pool.query("SELECT * FROM users WHERE email = 'warden@hostel.com'");
     if (wardenCheck.rows.length === 0) {

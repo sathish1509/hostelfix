@@ -32,8 +32,9 @@ const AllComplaints = () => {
         const categoryMatch = c.category ? c.category.toLowerCase().includes(debouncedSearch.toLowerCase()) : false;
         const studentMatch = c.student_name ? c.student_name.toLowerCase().includes(debouncedSearch.toLowerCase()) : false;
         const blockMatch = c.block ? c.block.toLowerCase().includes(debouncedSearch.toLowerCase()) : false;
+        const idMatch = String(c.id).toLowerCase().includes(debouncedSearch.toLowerCase()) || `#${c.id}`.toLowerCase().includes(debouncedSearch.toLowerCase());
         
-        const matchesSearch = categoryMatch || studentMatch || blockMatch;
+        const matchesSearch = categoryMatch || studentMatch || blockMatch || idMatch;
         return matchesStatus && matchesSearch;
     });
 

@@ -48,27 +48,22 @@ const RaiseComplaint = () => {
         setIsSubmitting(true);
 
         const newComplaint = {
-            id: Date.now(),
-            title,
-            description,
+            description: `[${title}] ${description}`,
             category,
-            priority,
-            status: 'Pending',
-            date: new Date().toLocaleDateString('en-GB'),
+            urgency: priority,
             attachment: media, 
             attachmentType: mediaType,
-            studentName: user?.name || "John Student",
-            studentId: user?.id || "s1",
-            room: user?.room || "101",
-            block: user?.block || "A"
         };
 
-        // Simulate API call
-        setTimeout(() => {
-            addComplaint(newComplaint);
-            setIsSubmitting(false);
-            navigate('/student/dashboard');
-        }, 1500);
+        // Real API call
+        addComplaint(newComplaint)
+            .then(() => {
+                setIsSubmitting(false);
+                navigate('/student/dashboard');
+            })
+            .catch(() => {
+                setIsSubmitting(false);
+            });
     };
 
     return (

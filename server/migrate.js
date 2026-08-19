@@ -20,7 +20,7 @@ const migrate = async () => {
     // 2. Drop constraint on users role and re-add it
     try {
       await pool.query('ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;');
-      await pool.query("ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('student', 'warden', 'admin'));");
+      await pool.query("ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('student', 'warden'));");
       console.log("Updated users role constraint.");
     } catch (e) {
       console.log("Error updating users role constraint:", e.message);
@@ -29,7 +29,7 @@ const migrate = async () => {
     // 3. Drop constraint on complaints status and re-add it
     try {
       await pool.query('ALTER TABLE complaints DROP CONSTRAINT IF EXISTS complaints_status_check;');
-      await pool.query("ALTER TABLE complaints ADD CONSTRAINT complaints_status_check CHECK (status IN ('Pending', 'In Progress', 'Resolved', 'Escalated'));");
+      await pool.query("ALTER TABLE complaints ADD CONSTRAINT complaints_status_check CHECK (status IN ('Pending', 'In Progress', 'Resolved'));");
       console.log("Updated complaints status constraint.");
     } catch (e) {
       console.log("Error updating complaints status constraint:", e.message);

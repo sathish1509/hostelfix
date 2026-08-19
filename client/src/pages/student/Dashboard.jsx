@@ -16,7 +16,7 @@ const StudentDashboard = () => {
     const [selectedComplaint, setSelectedComplaint] = useState(null);
     
     // Filter complaints for current user
-    const myComplaints = complaints.filter(c => c.studentId === (user?.id || 's1'));
+    const myComplaints = complaints;
     
     // Calculate Stats
     const stats = [
@@ -115,10 +115,10 @@ const StudentDashboard = () => {
                                       </div>
                                       <div>
                                           <h4 className="font-bold text-dark-900 dark:text-white text-lg tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                                            {complaint.title}
+                                            {complaint.category}
                                           </h4>
                                           <div className="flex items-center gap-3 text-sm font-semibold text-dark-400 dark:text-dark-500 mt-0.5">
-                                            <span>{complaint.date}</span>
+                                            <span>{new Date(complaint.created_at).toLocaleDateString()}</span>
                                             <span className="w-1 h-1 rounded-full bg-dark-300 dark:bg-dark-600" />
                                             <span className="capitalize">{complaint.category}</span>
                                           </div>

@@ -23,7 +23,7 @@ const ProfileCard = ({ user }) => {
                             className="w-full h-full object-cover"
                         />
                     </div>
-                     <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 border-4 border-white dark:border-dark-800 rounded-2xl z-20 shadow-lg" title="Active"></div>
+                     <div className={`absolute -bottom-1 -right-1 w-6 h-6 ${user.statusColor || 'bg-emerald-500'} border-4 border-white dark:border-dark-800 rounded-2xl z-20 shadow-lg`} title={user.currentStatus || "Active"}></div>
                 </div>
 
                 {/* Info Section */}
@@ -83,8 +83,8 @@ const ProfileCard = ({ user }) => {
                                 <div className="text-left">
                                     <p className="text-[10px] font-bold text-dark-400 dark:text-dark-500 uppercase tracking-widest">Status</p>
                                     <p className="text-sm font-bold text-dark-800 dark:text-dark-100 flex items-center gap-1.5">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                      {user.currentStatus || "Inside Hostel"}
+                                      <span className={`w-1.5 h-1.5 rounded-full ${user.statusColor || 'bg-emerald-500'} animate-pulse`} />
+                                      {user.currentStatus || "In Hostel"}
                                     </p>
                                 </div>
                             </div>

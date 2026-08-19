@@ -13,7 +13,7 @@ const initDB = async () => {
       name VARCHAR(100) NOT NULL,
       email VARCHAR(100) UNIQUE NOT NULL,
       password VARCHAR(255) NOT NULL,
-      role VARCHAR(10) CHECK (role IN ('student', 'warden', 'admin')) DEFAULT 'student',
+      role VARCHAR(10) CHECK (role IN ('student', 'warden')) DEFAULT 'student',
       room_number VARCHAR(20),
       block VARCHAR(10),
       created_at TIMESTAMP DEFAULT NOW()
@@ -33,7 +33,7 @@ const initDB = async () => {
       category VARCHAR(50) CHECK (category IN ('Electrical', 'Plumbing', 'Cleanliness', 'Furniture', 'Internet', 'Other')),
       description TEXT NOT NULL,
       urgency VARCHAR(10) CHECK (urgency IN ('Low', 'Medium', 'High')) DEFAULT 'Low',
-      status VARCHAR(20) CHECK (status IN ('Pending', 'In Progress', 'Resolved', 'Escalated')) DEFAULT 'Pending',
+      status VARCHAR(20) CHECK (status IN ('Pending', 'In Progress', 'Resolved')) DEFAULT 'Pending',
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW()
     );

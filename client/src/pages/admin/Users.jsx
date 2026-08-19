@@ -109,9 +109,12 @@ const Users = () => {
         try {
             const { default: api } = await import('../../utils/api');
             const res = await api.get('/users');
-            // Adding a mock warden just for visual consistency since API only returns students based on requirement
-            const demoWarden = { id: 'warden-1', name: 'Warden Demo', email: 'warden@hostel.com', role: 'warden', status: 'Active', isOnDuty: true, lastActive: '2 mins ago' };
-            setUsers([demoWarden, ...res.data]);
+            setUsers(res.data.map(u => ({
+                ...u, 
+                status: 'Active', 
+                isOnDuty: u.role === 'warden' ? true : undefined,
+                lastActive: 'Just now'
+            })));
         } catch (error) {
             console.error(error);
             toast.error("Failed to load users");
@@ -144,8 +147,17 @@ const Users = () => {
         toast.error("Not implemented in backend requirements");
     };
 
-    const deleteUser = (id, name) => {
-        toast.error("Not implemented in backend requirements");
+    const deleteUser = async (id, name) => {
+        if (!window.confirm(`Are you sure you want to permanently delete ${name}?`)) return;
+        try {
+            const { default: api } = await import('../../utils/api');
+            await api.delete(`/users/${id}`);
+            setUsers(users.filter(u => u.id !== id));
+            toast.success("User deleted successfully");
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to delete user");
+        }
     };
 
     return (

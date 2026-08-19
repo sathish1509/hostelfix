@@ -1,22 +1,49 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Bell, Check, Info, AlertTriangle } from "lucide-react";
+import { Bell } from "lucide-react";
 import { cn } from "../../utils/cn";
+import { useComplaint } from "../../context/ComplaintContext";
 
 const NotificationDropdown = ({ isOpen }) => {
-  // Mock notifications
-  const [notifications, setNotifications] = useState([
-    { id: 1, title: "Complaint Approved", message: "Your complaint #C-1002 has been approved.", type: "success", time: "2 min ago", read: false },
-    { id: 2, title: "New Announcement", message: "Water supply maintenance tomorrow.", type: "info", time: "1 hour ago", read: false },
-    { id: 3, title: "SLA Breech Warning", message: "Complaint #C-998 is overdue.", type: "warning", time: "1 day ago", read: true },
-  ]);
+  const { complaints } = useComplaint();
+  const [readIds, setReadIds] = useState(new Set());
+
+  // Generate dynamic notifications from recent complaints
+  const notifications = useMemo(() => {
+    return complaints.slice(0, 5).map(c => {
+      let title = `Complaint Updated`;
+      let message = `Complaint #${c.id} is now marked as ${c.status}.`;
+      
+      if (c.status === 'Pending') {
+        title = `New Complaint Logged`;
+        message = `Your complaint #${c.id} for ${c.category} has been received.`;
+      } else if (c.status === 'Resolved') {
+        title = `Complaint Resolved!`;
+        message = `Complaint #${c.id} has been successfully resolved.`;
+      } else if (c.status === 'Escalated') {
+        title = `Complaint Escalated`;
+        message = `Complaint #${c.id} has been escalated for faster resolution.`;
+      }
+
+      return {
+        id: c.id,
+        title,
+        message,
+        time: new Date(c.created_at).toLocaleDateString(),
+        read: readIds.has(c.id)
+      };
+    });
+  }, [complaints, readIds]);
 
   const markAsRead = (id) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    const newReadIds = new Set(readIds);
+    newReadIds.add(id);
+    setReadIds(newReadIds);
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    const newReadIds = new Set(complaints.map(c => c.id));
+    setReadIds(newReadIds);
   };
 
   if (!isOpen) return null;

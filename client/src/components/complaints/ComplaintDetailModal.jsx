@@ -53,15 +53,15 @@ const ComplaintDetailModal = ({ complaint, onClose }) => {
                   {complaint.status}
                 </Badge>
                 <span className={`text-xs font-semibold px-2 py-1 rounded border ${
-                    complaint.priority === 'High' ? 'text-red-600 border-red-200 bg-red-50' : 
-                    complaint.priority === 'Medium' ? 'text-orange-600 border-orange-200 bg-orange-50' : 
+                    complaint.urgency === 'High' ? 'text-red-600 border-red-200 bg-red-50' : 
+                    complaint.urgency === 'Medium' ? 'text-orange-600 border-orange-200 bg-orange-50' : 
                     'text-green-600 border-green-200 bg-green-50'
                 }`}>
-                    {complaint.priority} Priority
+                    {complaint.urgency} Priority
                 </span>
               </div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 pr-8">
-                {complaint.title}
+                {complaint.category}
               </h2>
             </div>
             <button 
@@ -82,7 +82,7 @@ const ComplaintDetailModal = ({ complaint, onClose }) => {
                 </div>
                  <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                     <Calendar size={16} />
-                    <span>Date: <span className="font-semibold text-gray-900 dark:text-gray-200">{complaint.date}</span></span>
+                    <span>Date: <span className="font-semibold text-gray-900 dark:text-gray-200">{new Date(complaint.created_at).toLocaleDateString()}</span></span>
                 </div>
              </div>
 

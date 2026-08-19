@@ -27,13 +27,14 @@ const MyComplaints = () => {
         return () => clearTimeout(t);
     }, [search]);
 
-    const myComplaints = complaints.filter(c => c.studentId === 's1');
+    const myComplaints = complaints;
 
     const filtered = myComplaints.filter(c => {
         const matchesStatus = filter === "All" || c.status === filter;
         const matchesSearch =
-            c.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-            c.id.toLowerCase().includes(debouncedSearch.toLowerCase());
+            (c.category || '').toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            String(c.id).toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            `#${c.id}`.toLowerCase().includes(debouncedSearch.toLowerCase());
         return matchesStatus && matchesSearch;
     });
 
@@ -130,10 +131,10 @@ const MyComplaints = () => {
                                             <div className="flex items-center gap-3 mb-1 flex-wrap">
                                                 <span className="font-mono text-xs text-gray-400">#{complaint.id}</span>
                                                 <Badge variant={statusColors[complaint.status] || 'default'}>{complaint.status}</Badge>
-                                                <span className="text-xs text-gray-400">• {complaint.date}</span>
+                                                <span className="text-xs text-gray-400">• {new Date(complaint.created_at).toLocaleDateString()}</span>
                                             </div>
                                             <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 transition-colors">
-                                                {complaint.title}
+                                                {complaint.category}
                                             </h3>
                                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">
                                                 {complaint.description}
@@ -142,12 +143,12 @@ const MyComplaints = () => {
 
                                         <div className="flex items-center gap-4">
                                             <div className="text-right hidden md:block">
-                                                <p className="text-xs font-medium text-gray-500">Priority</p>
+                                                <p className="text-xs font-medium text-gray-500">Urgency</p>
                                                 <p className={`text-sm font-semibold ${
-                                                    complaint.priority === 'High' ? 'text-red-500' :
-                                                    complaint.priority === 'Medium' ? 'text-orange-500' : 'text-green-500'
+                                                    complaint.urgency === 'High' ? 'text-red-500' :
+                                                    complaint.urgency === 'Medium' ? 'text-orange-500' : 'text-green-500'
                                                 }`}>
-                                                    {complaint.priority}
+                                                    {complaint.urgency}
                                                 </p>
                                             </div>
                                             <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 group-hover:text-primary-600 transition-colors">
